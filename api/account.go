@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/mattn/go-sqlite3"
 
@@ -21,7 +20,7 @@ import (
 )
 
 func ServeAccountList(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 
 	switch {
 	case me == nil:
@@ -44,7 +43,7 @@ func ServeAccountList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateAccount(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -99,7 +98,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func ImportAccounts(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -150,14 +149,14 @@ func ImportAccounts(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeAccountMe(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 
 	err := json.NewEncoder(w).Encode(me)
 	catch(err)
 }
 
 func ServeAccountByHandle(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -196,7 +195,7 @@ func ServeAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateAccount(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -244,7 +243,7 @@ func UpdateAccountPart(w http.ResponseWriter, r *http.Request) {
 	acc, err := data.GetAccount(id)
 	catch(err)
 
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Id != acc.Id {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -265,7 +264,7 @@ func UpdateAccountPart(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteAccount(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return

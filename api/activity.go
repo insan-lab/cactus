@@ -7,13 +7,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/context"
-
 	"github.com/FurqanSoftware/cactus/data"
 )
 
 func ServeActivityList(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return

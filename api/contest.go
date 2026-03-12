@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/context"
-
 	"github.com/FurqanSoftware/cactus/data"
 	"github.com/FurqanSoftware/cactus/hub"
 )
@@ -22,7 +20,7 @@ func ServeContest(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateContest(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return

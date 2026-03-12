@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
 	"github.com/FurqanSoftware/cactus/data"
@@ -16,7 +15,7 @@ import (
 )
 
 func ServeClarificationList(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 
 	var (
 		clars []*data.Clarification
@@ -41,7 +40,7 @@ func ServeClarificationList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateClarification(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 
 	body := struct {
 		ProblemId int64  `json:"problemId"`
@@ -92,7 +91,7 @@ func ServeClarification(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateClarification(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -150,7 +149,7 @@ func UpdateClarification(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteClarification(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return

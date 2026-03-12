@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
 	"github.com/FurqanSoftware/cactus/belt"
@@ -20,7 +19,7 @@ import (
 )
 
 func CreateExecution(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -54,7 +53,7 @@ func CreateExecution(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeExecution(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -72,7 +71,7 @@ func ServeExecution(w http.ResponseWriter, r *http.Request) {
 }
 
 func ApplyExecution(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -104,7 +103,7 @@ func ApplyExecution(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeExecutionTestOutput(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return

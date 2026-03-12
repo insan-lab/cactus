@@ -9,7 +9,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
@@ -41,7 +40,6 @@ func handleIdentity(h http.Handler) http.Handler {
 		_, err := api.Store.Get(r, "s")
 		if err != nil {
 			r.Header.Del("Cookie")
-			context.Clear(r)
 		}
 
 		sess, err := api.Store.Get(r, "s")
@@ -50,7 +48,7 @@ func handleIdentity(h http.Handler) http.Handler {
 		id, _ := sess.Values["me.id"].(int64)
 		acc, err := data.GetAccount(id)
 		catch(err)
-		context.Set(r, "me", acc)
+		r = api.WithCurrentAccount(r, acc)
 
 		h.ServeHTTP(w, r)
 	})

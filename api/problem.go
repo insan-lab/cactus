@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
 	"github.com/FurqanSoftware/cactus/data"
@@ -22,7 +21,7 @@ func ServeProblemList(w http.ResponseWriter, r *http.Request) {
 	cnt, err := data.GetContest()
 	catch(err)
 
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if !cnt.Started() && (me == nil || (me.Level != data.Judge && me.Level != data.Administrator)) {
 		err = json.NewEncoder(w).Encode([]*data.Problem{})
 		catch(err)
@@ -36,7 +35,7 @@ func ServeProblemList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProblem(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -81,7 +80,7 @@ func ServeProblemBySlug(w http.ResponseWriter, r *http.Request) {
 	cnt, err := data.GetContest()
 	catch(err)
 
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if !cnt.Started() && (me == nil || (me.Level != data.Judge && me.Level != data.Administrator)) {
 		http.Error(w, "", http.StatusNotFound)
 		return
@@ -98,7 +97,7 @@ func ServeProblem(w http.ResponseWriter, r *http.Request) {
 	cnt, err := data.GetContest()
 	catch(err)
 
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if !cnt.Started() && (me == nil || (me.Level != data.Judge && me.Level != data.Administrator)) {
 		http.Error(w, "", http.StatusNotFound)
 		return
@@ -116,7 +115,7 @@ func ServeProblem(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProblem(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -249,7 +248,7 @@ func UpdateProblem(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProblem(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || me.Level != data.Administrator {
 		http.Error(w, "", http.StatusForbidden)
 		return

@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
 	"github.com/FurqanSoftware/cactus/belt"
@@ -20,7 +19,7 @@ import (
 )
 
 func ServeSubmissionList(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 
 	switch {
 	case me == nil:
@@ -44,7 +43,7 @@ func ServeSubmissionList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateSubmission(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -95,7 +94,7 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeSubmission(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -118,7 +117,7 @@ func ServeSubmission(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateSubmission(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -211,7 +210,7 @@ func ServeSubmissionTestOutput(w http.ResponseWriter, r *http.Request) {
 }
 
 func ResetSubmission(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
@@ -235,7 +234,7 @@ func ResetSubmission(w http.ResponseWriter, r *http.Request) {
 }
 
 func JudgeSubmission(w http.ResponseWriter, r *http.Request) {
-	me, _ := context.Get(r, "me").(*data.Account)
+	me := currentAccount(r)
 	if me == nil || (me.Level != data.Judge && me.Level != data.Administrator) {
 		http.Error(w, "", http.StatusForbidden)
 		return
