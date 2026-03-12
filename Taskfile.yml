@@ -83,6 +83,12 @@ tasks:
     generates:
       - ui/index.min.html
 
+  dev:
+    deps: [build]
+    cmds:
+      - ./cactus
+    interactive: true
+
   sandbox-image:
     cmds:
       - docker build -t cactus-sandbox -f Dockerfile.sandbox .
