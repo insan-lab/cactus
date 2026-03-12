@@ -28,6 +28,8 @@ _testmain.go
 /ui/assets/js/cactus.min.js
 /ui/index.min.html
 
+/.task
+
 /cactus
 /cactus.bs/
 /cactus.db*

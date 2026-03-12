@@ -1,0 +1,93 @@
+# Copyright 2014 The Cactus Authors. All rights reserved.
+
+version: '3'
+
+tasks:
+  default:
+    deps: [build]
+
+  build:
+    deps: [minify-css, minify-js, minify-html]
+    cmds:
+      - go build ./cmd/cactus
+    sources:
+      - go.mod
+      - go.sum
+      - cmd/cactus/config-sample.toml
+      - data/db-init.sql
+      - ui/assets/css/screen.min.css
+      - ui/assets/js/cactus.min.js
+      - ui/index.min.html
+      - api/*.go
+      - belt/*.go
+      - cmd/cactus/*.go
+      - data/*.go
+      - hub/*.go
+      - ui/*.go
+    generates:
+      - cactus
+
+  minify-css:
+    vars:
+      FILES: >-
+        ui/assets/css/animate+animo.css
+        ui/assets/css/bootstrap.css
+        ui/assets/css/fontawesome.css
+        ui/assets/css/hightlight.css
+        ui/assets/css/nprogress.css
+        ui/assets/css/screen.css
+    cmds:
+      - cat {{.FILES}} | npx cleancss -O2 -o ui/assets/css/screen.min.css
+    sources:
+      - ui/assets/css/*.css
+    generates:
+      - ui/assets/css/screen.min.css
+
+  minify-js:
+    vars:
+      FILES: >-
+        ui/assets/js/underscore.js
+        ui/assets/js/jquery.js
+        ui/assets/js/backbone.js
+        ui/assets/js/bootstrap.js
+        ui/assets/js/bootbox.js
+        ui/assets/js/sugar.js
+        ui/assets/js/moment.js
+        ui/assets/js/nprogress.js
+        ui/assets/js/animo.js
+        ui/assets/js/async.js
+        ui/assets/js/lunr.js
+        ui/assets/js/showdown.js
+        ui/assets/js/showdown-github.js
+        ui/assets/js/showdown-table.js
+        ui/assets/js/highlight.js
+        ui/assets/js/cactus.js
+    cmds:
+      - npx uglifyjs --compress --mangle -- {{.FILES}} > ui/assets/js/cactus.min.js
+    sources:
+      - ui/assets/js/*.js
+    generates:
+      - ui/assets/js/cactus.min.js
+
+  minify-html:
+    cmds:
+      - cat ui/index.html | tr '\t\n' '  ' | sed -e 's/  */ /g' > ui/index.min.html
+    sources:
+      - ui/index.html
+    generates:
+      - ui/index.min.html
+
+  dist:
+    deps: [build]
+    cmds:
+      - zip cactus.zip cactus LICENSE
+    sources:
+      - cactus
+      - LICENSE
+    generates:
+      - cactus.zip
+
+  clean:
+    cmds:
+      - rm -f cactus.zip cactus ui/index.min.html ui/assets/css/screen.min.css ui/assets/js/cactus.min.js.map ui/assets/js/cactus.min.js
+      - rm -rf .task
