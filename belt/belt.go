@@ -7,16 +7,20 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"sync"
 	"time"
 
-	"github.com/hjr265/jail.go/jail"
-
 	"github.com/FurqanSoftware/cactus/data"
 	"github.com/FurqanSoftware/cactus/hub"
+	"github.com/FurqanSoftware/cactus/sandbox"
 )
+
+// NewCell is the factory function for creating sandbox cells.
+// Set this from main before starting belt workers.
+var NewCell = func() (sandbox.Cell, error) {
+	return sandbox.NewJailCell()
+}
 
 var chNext = make(chan *data.Execution, 4096)
 
@@ -58,23 +62,17 @@ func Loop() {
 			prob, err := subm.Problem()
 			catch(err)
 
-			dir, err := ioutil.TempDir("", "")
+			cell, err := NewCell()
 			catch(err)
-			cell := &jail.Cell{
-				Dir: dir,
-			}
 			defer func() {
 				err := cell.Dispose()
 				trace(err)
 			}()
 
-			var chkCell *jail.Cell
+			var chkCell sandbox.Cell
 			if prob.Checker.Language != "" {
-				dir, err := ioutil.TempDir("", "")
+				chkCell, err = NewCell()
 				catch(err)
-				chkCell = &jail.Cell{
-					Dir: dir,
-				}
 
 				stack := Stacks[prob.Checker.Language]
 

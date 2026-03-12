@@ -29,17 +29,31 @@ task
 sudo ./cactus
 ```
 
-Cactus requires `sudo` for sandboxing submitted code. On first run, it creates a `config.toml` file that you can edit:
+Cactus requires `sudo` for sandboxing submitted code (when using the default ptrace jail). On first run, it creates a `config.toml` file that you can edit:
 
 ``` toml
 [core]
-addr = ":5050"    # Server address
+addr = ":5050"              # Server address
 
 [belt]
-size = 2          # Number of concurrent judging workers
+size = 2                    # Number of concurrent judging workers
+
+[sandbox]
+# mode = "jail"             # Options: "jail" (ptrace, default), "docker"
+# docker_image = "cactus-sandbox"
 ```
 
 The web interface will be available at `http://localhost:5050`.
+
+### Docker Sandbox
+
+To use Docker instead of the ptrace jail for sandboxing, first build the sandbox image:
+
+``` sh
+task sandbox-image
+```
+
+Then set `mode = "docker"` under `[sandbox]` in `config.toml`. You can customize the image name with `docker_image`.
 
 ## Why Cactus?
 

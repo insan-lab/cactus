@@ -13,6 +13,7 @@ import (
 	"github.com/pelletier/go-toml"
 
 	"github.com/FurqanSoftware/cactus/belt"
+	"github.com/FurqanSoftware/cactus/sandbox"
 )
 
 var cfg *toml.Tree
@@ -49,6 +50,24 @@ func main() {
 		err := http.ListenAndServe(addr, nil)
 		catch(err)
 	}()
+
+	if mode, ok := cfg.Get("sandbox.mode").(string); ok {
+		switch mode {
+		case "jail":
+			belt.NewCell = func() (sandbox.Cell, error) {
+				return sandbox.NewJailCell()
+			}
+		case "docker":
+			belt.NewCell = func() (sandbox.Cell, error) {
+				return sandbox.NewDockerCell()
+			}
+			if image, ok := cfg.Get("sandbox.docker_image").(string); ok {
+				sandbox.DockerImage = image
+			}
+		default:
+			log.Fatalf("Unknown sandbox.mode value %q in config.toml (expected \"jail\" or \"docker\")", mode)
+		}
+	}
 
 	beltSize, ok := cfg.Get("belt.size").(int64)
 	if !ok {

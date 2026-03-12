@@ -5,12 +5,12 @@ package belt
 import (
 	"io"
 
-	"github.com/hjr265/jail.go/jail"
+	"github.com/FurqanSoftware/cactus/sandbox"
 )
 
 type Stack interface {
-	Build(cell *jail.Cell, source io.Reader) (*jail.Cmd, error)
-	Run(cell *jail.Cell) *jail.Cmd
+	Build(cell sandbox.Cell, source io.Reader) (*sandbox.Cmd, error)
+	Run(cell sandbox.Cell) *sandbox.Cmd
 }
 
 var Stacks = map[string]Stack{

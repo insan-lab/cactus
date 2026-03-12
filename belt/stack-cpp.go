@@ -6,12 +6,12 @@ import (
 	"io"
 	"time"
 
-	"github.com/hjr265/jail.go/jail"
+	"github.com/FurqanSoftware/cactus/sandbox"
 )
 
 type StackCpp struct{}
 
-func (s *StackCpp) Build(cell *jail.Cell, source io.Reader) (*jail.Cmd, error) {
+func (s *StackCpp) Build(cell sandbox.Cell, source io.Reader) (*sandbox.Cmd, error) {
 	f, err := cell.Create("source.cpp")
 	if err != nil {
 		return nil, err
@@ -32,6 +32,6 @@ func (s *StackCpp) Build(cell *jail.Cell, source io.Reader) (*jail.Cmd, error) {
 	return cmd, nil
 }
 
-func (s *StackCpp) Run(cell *jail.Cell) *jail.Cmd {
+func (s *StackCpp) Run(cell sandbox.Cell) *sandbox.Cmd {
 	return cell.Command("./a.out")
 }

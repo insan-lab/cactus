@@ -1,6 +1,6 @@
 # Copyright 2014 The Cactus Authors. All rights reserved.
 
-version: '3'
+version: "3"
 
 tasks:
   default:
@@ -23,6 +23,7 @@ tasks:
       - cmd/cactus/*.go
       - data/*.go
       - hub/*.go
+      - sandbox/*.go
       - ui/*.go
     generates:
       - cactus
@@ -76,6 +77,12 @@ tasks:
       - ui/index.html
     generates:
       - ui/index.min.html
+
+  sandbox-image:
+    cmds:
+      - docker build -t cactus-sandbox -f Dockerfile.sandbox .
+    sources:
+      - Dockerfile.sandbox
 
   dist:
     deps: [build]

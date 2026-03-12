@@ -3,3 +3,7 @@ addr = ":5050"
 
 [belt]
 size = 2
+
+[sandbox]
+# mode = "jail"             # Options: "jail" (ptrace, default), "docker"
+# docker_image = "cactus-sandbox"
