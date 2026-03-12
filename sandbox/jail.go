@@ -4,7 +4,6 @@ package sandbox
 
 import (
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -17,7 +16,7 @@ type jailCell struct {
 
 // NewJailCell creates a Cell backed by the ptrace-based jail.
 func NewJailCell() (Cell, error) {
-	dir, err := ioutil.TempDir("", "cactus-jail-")
+	dir, err := os.MkdirTemp("", "cactus-jail-")
 	if err != nil {
 		return nil, err
 	}

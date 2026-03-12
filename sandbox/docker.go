@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -23,7 +22,7 @@ type dockerCell struct {
 
 // NewDockerCell creates a Cell backed by Docker containers.
 func NewDockerCell() (Cell, error) {
-	dir, err := ioutil.TempDir("", "cactus-docker-")
+	dir, err := os.MkdirTemp("", "cactus-docker-")
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +153,7 @@ func (r *dockerRunner) closePipeWriters() {
 }
 
 func (r *dockerRunner) collectUsages(cidFile string) {
-	cidBytes, err := ioutil.ReadFile(cidFile)
+	cidBytes, err := os.ReadFile(cidFile)
 	if err != nil {
 		return
 	}
