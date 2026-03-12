@@ -11,8 +11,6 @@ import (
 	"os/signal"
 	"runtime"
 
-	"github.com/pelletier/go-toml"
-
 	"github.com/FurqanSoftware/cactus/belt"
 	"github.com/FurqanSoftware/cactus/sandbox"
 )
@@ -23,8 +21,6 @@ var (
 	repoOwner = "FurqanSoftware"
 	repoName  = "cactus"
 )
-
-var cfg *toml.Tree
 
 func main() {
 	printBanner()
@@ -49,48 +45,46 @@ func main() {
 		catch(err)
 	}
 
-	cfg, err = toml.LoadFile("config.toml")
+	cfg, err := parseConfig("config.toml")
 	catch(err)
 	log.Print("Loaded config.toml")
 
-	go func() {
-		addr, ok := cfg.Get("core.addr").(string)
-		if !ok {
-			log.Fatal("Missing core.addr in config.toml")
-		}
+	if cfg.Core.Addr == "" {
+		log.Fatal("Missing core.addr in config.toml")
+	}
 
-		log.Printf("Listening on %s", addr)
-		err := http.ListenAndServe(addr, nil)
+	go func() {
+		log.Printf("Listening on %s", cfg.Core.Addr)
+		err := http.ListenAndServe(cfg.Core.Addr, nil)
 		catch(err)
 	}()
 
-	sandboxMode := "jail"
-	if mode, ok := cfg.Get("sandbox.mode").(string); ok {
-		sandboxMode = mode
-		switch mode {
-		case "jail":
-			belt.NewCell = func() (sandbox.Cell, error) {
-				return sandbox.NewJailCell()
-			}
-		case "docker":
-			belt.NewCell = func() (sandbox.Cell, error) {
-				return sandbox.NewDockerCell()
-			}
-			if image, ok := cfg.Get("sandbox.docker_image").(string); ok {
-				sandbox.DockerImage = image
-			}
-		default:
-			log.Fatalf("Unknown sandbox.mode value %q in config.toml (expected \"jail\" or \"docker\")", mode)
+	sandboxMode := cfg.Sandbox.Mode
+	if sandboxMode == "" {
+		sandboxMode = "jail"
+	}
+	switch sandboxMode {
+	case "jail":
+		belt.NewCell = func() (sandbox.Cell, error) {
+			return sandbox.NewJailCell()
 		}
+	case "docker":
+		belt.NewCell = func() (sandbox.Cell, error) {
+			return sandbox.NewDockerCell()
+		}
+		if cfg.Sandbox.DockerImage != "" {
+			sandbox.DockerImage = cfg.Sandbox.DockerImage
+		}
+	default:
+		log.Fatalf("Unknown sandbox.mode value %q in config.toml (expected \"jail\" or \"docker\")", sandboxMode)
 	}
 	log.Printf("Sandbox mode: %s", sandboxMode)
 
-	beltSize, ok := cfg.Get("belt.size").(int64)
-	if !ok {
+	if cfg.Belt.Size == 0 {
 		log.Fatal("Missing belt.size in config.toml")
 	}
-	log.Printf("Starting %d judging worker(s)", beltSize)
-	for ; beltSize > 0; beltSize-- {
+	log.Printf("Starting %d judging worker(s)", cfg.Belt.Size)
+	for i := 0; i < cfg.Belt.Size; i++ {
 		go belt.Loop()
 	}
 
