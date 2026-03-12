@@ -29,5 +29,6 @@ _testmain.go
 /ui/index.min.html
 
 /cactus
+/cactus.bs/
 /cactus.db*
 /config.toml
