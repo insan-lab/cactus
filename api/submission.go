@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -71,6 +72,8 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 	}
 	err = subm.Put()
 	catch(err)
+
+	log.Printf("Submission %d created by account %d for problem %d (%s)", subm.Id, me.Id, prob.Id, body.Language)
 
 	err = json.NewEncoder(w).Encode(subm)
 	catch(err)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -26,6 +27,7 @@ func NewDockerCell() (Cell, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Created docker cell: %s", dir)
 	return &dockerCell{dir: dir}, nil
 }
 
@@ -42,7 +44,6 @@ func (d *dockerCell) Create(name string) (*os.File, error) {
 }
 
 func (d *dockerCell) Dispose() error {
-	fmt.Println("-- ", d.dir)
 	return os.RemoveAll(d.dir)
 }
 
@@ -110,8 +111,6 @@ func (r *dockerRunner) Run() error {
 	dockerArgs = append(dockerArgs, DockerImage, r.name)
 	dockerArgs = append(dockerArgs, r.args...)
 
-	fmt.Println(dockerArgs)
-
 	cmd := exec.Command("docker", dockerArgs...)
 
 	if r.stdinR != nil {
@@ -124,15 +123,18 @@ func (r *dockerRunner) Run() error {
 		cmd.Stderr = r.stderrW
 	}
 
+	log.Printf("Docker run: %s %v", r.name, r.args)
 	start := time.Now()
 	err := cmd.Start()
 	if err != nil {
+		log.Printf("Docker start failed: %v", err)
 		r.closePipeWriters()
 		return err
 	}
 
 	waitErr := cmd.Wait()
 	wallTime := time.Since(start)
+	log.Printf("Docker run completed in %s", wallTime)
 
 	r.closePipeWriters()
 

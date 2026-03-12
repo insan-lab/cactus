@@ -59,5 +59,6 @@ func init() {
 		catch(err)
 		err = acc.Put()
 		catch(err)
+		log.Print("Created default admin account (handle: cactus, password: cactus)")
 	}
 }

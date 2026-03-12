@@ -3,8 +3,10 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gorilla/context"
@@ -17,11 +19,15 @@ import (
 	"github.com/FurqanSoftware/cactus/ui"
 )
 
+func writeRequestLog(_ io.Writer, params handlers.LogFormatterParams) {
+	log.Printf("%s %s %d %s", params.Request.Method, params.URL.RequestURI(), params.StatusCode, time.Since(params.TimeStamp))
+}
+
 func handlePanic(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				log.Print(err)
+				log.Printf("panic: %s %s: %v", r.Method, r.URL.Path, err)
 				http.Error(w, "", http.StatusInternalServerError)
 			}
 		}()
@@ -237,6 +243,6 @@ func init() {
 		PathPrefix("/").
 		Handler(handleIdentity(http.HandlerFunc(ui.ServeIndex)))
 
-	http.Handle("/hub", handlePanic(handleIdentity(http.HandlerFunc(hub.HandleConnect))))
-	http.Handle("/", handlePanic(http.TimeoutHandler(handlers.CompressHandler(r), 8*time.Second, "")))
+	http.Handle("/hub", handlers.CustomLoggingHandler(os.Stderr, handlePanic(handleIdentity(http.HandlerFunc(hub.HandleConnect))), writeRequestLog))
+	http.Handle("/", handlers.CustomLoggingHandler(os.Stderr, handlePanic(http.TimeoutHandler(handlers.CompressHandler(r), 8*time.Second, "")), writeRequestLog))
 }

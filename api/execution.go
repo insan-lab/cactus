@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -39,6 +40,8 @@ func CreateExecution(w http.ResponseWriter, r *http.Request) {
 	}
 	err = exec.Put()
 	catch(err)
+
+	log.Printf("Execution %d created for submission %d by account %d", exec.Id, subm.Id, me.Id)
 
 	belt.Push(exec)
 

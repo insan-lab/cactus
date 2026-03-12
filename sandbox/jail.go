@@ -5,6 +5,7 @@ package sandbox
 import (
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/hjr265/jail.go/jail"
@@ -20,6 +21,7 @@ func NewJailCell() (Cell, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("Created jail cell: %s", dir)
 	return &jailCell{cell: &jail.Cell{Dir: dir}}, nil
 }
 

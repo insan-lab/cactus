@@ -23,6 +23,8 @@ func main() {
 
 	_, err := os.Stat("config.toml")
 	if os.IsNotExist(err) {
+		log.Print("Creating config.toml from sample")
+
 		f2, err := configSampleFS.Open("config-sample.toml")
 		catch(err)
 
@@ -39,6 +41,7 @@ func main() {
 
 	cfg, err = toml.LoadFile("config.toml")
 	catch(err)
+	log.Print("Loaded config.toml")
 
 	go func() {
 		addr, ok := cfg.Get("core.addr").(string)
@@ -51,7 +54,9 @@ func main() {
 		catch(err)
 	}()
 
+	sandboxMode := "jail"
 	if mode, ok := cfg.Get("sandbox.mode").(string); ok {
+		sandboxMode = mode
 		switch mode {
 		case "jail":
 			belt.NewCell = func() (sandbox.Cell, error) {
@@ -68,11 +73,13 @@ func main() {
 			log.Fatalf("Unknown sandbox.mode value %q in config.toml (expected \"jail\" or \"docker\")", mode)
 		}
 	}
+	log.Printf("Sandbox mode: %s", sandboxMode)
 
 	beltSize, ok := cfg.Get("belt.size").(int64)
 	if !ok {
 		log.Fatal("Missing belt.size in config.toml")
 	}
+	log.Printf("Starting %d judging worker(s)", beltSize)
 	for ; beltSize > 0; beltSize-- {
 		go belt.Loop()
 	}

@@ -3,6 +3,7 @@
 package hub
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -81,7 +82,9 @@ func init() {
 
 			case v := <-chMsg:
 				for c := range Conns {
-					c.WriteJSON(v)
+					if err := c.WriteJSON(v); err != nil {
+						log.Printf("WebSocket write error: %v", err)
+					}
 				}
 			}
 		}

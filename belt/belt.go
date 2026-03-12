@@ -32,9 +32,10 @@ func Loop() {
 	for {
 		func() {
 			exec := <-chNext
+			log.Printf("Judging execution %d", exec.Id)
 			defer func() {
 				if err := recover(); err != nil {
-					log.Print(err)
+					log.Printf("Execution %d panicked: %v", exec.Id, err)
 
 					exec.Status = 6
 					err := exec.Put()
@@ -120,6 +121,7 @@ func Loop() {
 					exec.Build.Error = buildErrBuf.String()
 
 					exec.Verdict = data.CompilationError
+					log.Printf("Execution %d: compilation error", exec.Id)
 
 					exec.Status = 7
 					err = exec.Put()
@@ -129,6 +131,7 @@ func Loop() {
 				}
 			}
 
+			log.Printf("Execution %d: compiled, running %d test(s)", exec.Id, len(prob.Tests))
 			exec.Status = 2
 			err = exec.Put()
 			catch(err)
@@ -329,10 +332,29 @@ func Loop() {
 				}
 			}
 
+			log.Printf("Execution %d: verdict %s", exec.Id, verdictName(exec.Verdict))
+
 			exec.Status = 7
 			err = exec.Put()
 			catch(err)
 			hub.Send([]interface{}{"SYNC", "executions", exec.Id})
 		}()
+	}
+}
+
+func verdictName(v data.Verdict) string {
+	switch v {
+	case data.Accepted:
+		return "Accepted"
+	case data.WrongAnswer:
+		return "Wrong Answer"
+	case data.CpuLimitExceeded:
+		return "CPU Limit Exceeded"
+	case data.MemoryLimitExceeded:
+		return "Memory Limit Exceeded"
+	case data.CompilationError:
+		return "Compilation Error"
+	default:
+		return fmt.Sprintf("Unknown(%d)", v)
 	}
 }
