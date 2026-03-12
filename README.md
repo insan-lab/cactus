@@ -20,7 +20,7 @@ Cactus is a programming contest hosting application. It is a single all-in-one b
 ## Build
 
 ``` sh
-make
+task
 ```
 
 ## Usage
