@@ -36,6 +36,7 @@ func ListActivities(cursor int64) ([]*Activity, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	acts := []*Activity{}
 	for rows.Next() {

@@ -59,6 +59,7 @@ func ListProblems() ([]*Problem, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	probs := []*Problem{}
 	for rows.Next() {

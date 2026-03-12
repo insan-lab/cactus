@@ -45,6 +45,7 @@ func ListStandings() ([]*Standing, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	stnds := []*Standing{}
 	for rows.Next() {

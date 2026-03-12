@@ -53,6 +53,7 @@ func ListSubmissions(cursor int64) ([]*Submission, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	subms := []*Submission{}
 	for rows.Next() {
@@ -78,6 +79,7 @@ func ListSubmissionsByAuthor(acc *Account) ([]*Submission, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	subms := []*Submission{}
 	for rows.Next() {

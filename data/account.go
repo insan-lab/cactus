@@ -43,6 +43,7 @@ func ListAccounts() ([]*Account, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	accs := []*Account{}
 	for rows.Next() {

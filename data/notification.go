@@ -33,6 +33,7 @@ func ListNotificationsForAccount(acc *Account, cursor int64) ([]*Notification, e
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	notifs := []*Notification{}
 	for rows.Next() {
