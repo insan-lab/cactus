@@ -21,12 +21,12 @@ var cfg *toml.Tree
 func main() {
 	runtime.GOMAXPROCS((runtime.NumCPU() + 1) / 2)
 
-	_, err := os.Stat("config.tml")
+	_, err := os.Stat("config.toml")
 	if os.IsNotExist(err) {
-		f2, err := zrsc.Open("cmd/cactus/config-sample.tml")
+		f2, err := zrsc.Open("cmd/cactus/config-sample.toml")
 		catch(err)
 
-		f, err := os.Create("config.tml")
+		f, err := os.Create("config.toml")
 		_, err = io.Copy(f, f2)
 		catch(err)
 
@@ -36,13 +36,13 @@ func main() {
 		catch(err)
 	}
 
-	cfg, err = toml.LoadFile("config.tml")
+	cfg, err = toml.LoadFile("config.toml")
 	catch(err)
 
 	go func() {
 		addr, ok := cfg.Get("core.addr").(string)
 		if !ok {
-			log.Fatal("Missing core.addr in config.tml")
+			log.Fatal("Missing core.addr in config.toml")
 		}
 
 		log.Printf("Listening on %s", addr)
@@ -52,7 +52,7 @@ func main() {
 
 	beltSize, ok := cfg.Get("belt.size").(int64)
 	if !ok {
-		log.Fatal("Missing belt.size in config.tml")
+		log.Fatal("Missing belt.size in config.toml")
 	}
 	for ; beltSize > 0; beltSize-- {
 		go belt.Loop()

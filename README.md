@@ -29,7 +29,7 @@ make
 sudo ./cactus
 ```
 
-Cactus requires `sudo` for sandboxing submitted code. On first run, it creates a `config.tml` file that you can edit:
+Cactus requires `sudo` for sandboxing submitted code. On first run, it creates a `config.toml` file that you can edit:
 
 ``` toml
 [core]
