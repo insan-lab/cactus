@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"runtime"
 
-	"github.com/hjr265/go-zrsc/zrsc"
 	"github.com/pelletier/go-toml"
 
 	"github.com/FurqanSoftware/cactus/belt"
@@ -23,10 +22,11 @@ func main() {
 
 	_, err := os.Stat("config.toml")
 	if os.IsNotExist(err) {
-		f2, err := zrsc.Open("cmd/cactus/config-sample.toml")
+		f2, err := configSampleFS.Open("config-sample.toml")
 		catch(err)
 
 		f, err := os.Create("config.toml")
+		catch(err)
 		_, err = io.Copy(f, f2)
 		catch(err)
 

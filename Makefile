@@ -6,7 +6,7 @@ CSSFILES = ui/assets/css/animate+animo.css ui/assets/css/bootstrap.css ui/assets
 
 JSFILES = ui/assets/js/underscore.js ui/assets/js/jquery.js ui/assets/js/backbone.js ui/assets/js/bootstrap.js ui/assets/js/bootbox.js ui/assets/js/sugar.js ui/assets/js/moment.js ui/assets/js/nprogress.js ui/assets/js/animo.js ui/assets/js/async.js ui/assets/js/lunr.js ui/assets/js/showdown.js ui/assets/js/showdown-github.js ui/assets/js/showdown-table.js ui/assets/js/highlight.js ui/assets/js/cactus.js
 
-RSCFILES = cmd/cactus/config-sample.toml data/db-init.sql ui/assets/css/screen.min.css ui/assets/font/fontawesome.eot ui/assets/font/fontawesome.svg ui/assets/font/fontawesome.ttf ui/assets/font/fontawesome.woff ui/assets/font/glyphicons-halflings-regular.eot ui/assets/font/glyphicons-halflings-regular.svg ui/assets/font/glyphicons-halflings-regular.ttf ui/assets/font/glyphicons-halflings-regular.woff ui/assets/font/mavenpro-bold.eot ui/assets/font/mavenpro-bold.svg ui/assets/font/mavenpro-bold.ttf ui/assets/font/mavenpro-bold.woff ui/assets/font/mavenpro-regular.eot ui/assets/font/mavenpro-regular.svg ui/assets/font/mavenpro-regular.ttf ui/assets/font/mavenpro-regular.woff ui/assets/font/ubuntumono-r.eot ui/assets/font/ubuntumono-r.svg ui/assets/font/ubuntumono-r.ttf ui/assets/font/ubuntumono-r.woff ui/assets/img/mascot.png ui/assets/js/cactus.min.js ui/assets/json/credits.json ui/index.min.html
+RSCFILES = cmd/cactus/config-sample.toml data/db-init.sql ui/assets/css/screen.min.css ui/assets/js/cactus.min.js ui/index.min.html
 
 all: cactus
 
@@ -15,8 +15,6 @@ clean:
 
 cactus: $(GOFILES) $(RSCFILES)
 	go build ./cmd/cactus
-	zip - $(RSCFILES) | cat >> $@
-	zip -A $@
 
 ui/assets/css/screen.min.css: $(CSSFILES)
 	cat $^ | ./node_modules/.bin/cleancss -O2 -o $@

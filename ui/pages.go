@@ -3,12 +3,9 @@
 package ui
 
 import (
-	"io/ioutil"
 	"mime"
 	"net/http"
 	"text/template"
-
-	"github.com/hjr265/go-zrsc/zrsc"
 
 	"github.com/FurqanSoftware/cactus/data"
 )
@@ -37,12 +34,8 @@ func ServeIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	f, err := zrsc.Open("ui/index.min.html")
-	catch(err)
-	b, err := ioutil.ReadAll(f)
+	b, err := indexHTML.ReadFile("index.min.html")
 	catch(err)
 	_, err = tplIndex.Parse(string(b))
-	catch(err)
-	err = f.Close()
 	catch(err)
 }

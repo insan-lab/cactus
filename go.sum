@@ -14,8 +14,6 @@ github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0U
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/hjr265/bloo v0.0.0-20141103193725-3fd271936319 h1:HrXe4dtcstVuzFz8aZ8Q3hEHYDpnzT3UH55GEDLn/2I=
 github.com/hjr265/bloo v0.0.0-20141103193725-3fd271936319/go.mod h1:zh0tDUlGsq8sOSZm8jLPPmeMAU2UqlK7nEUN4vLnFOk=
-github.com/hjr265/go-zrsc v0.0.0-20140522072337-790a85bb06d2 h1:/t9cUq7e+hcbP6q0of40xrSGqSkIbziuYbZ5q5WnGLQ=
-github.com/hjr265/go-zrsc v0.0.0-20140522072337-790a85bb06d2/go.mod h1:iiVuSesAHibQhpOebtoPbCYyhVU/zWDflgUVgO7J4so=
 github.com/hjr265/jail.go v0.0.0-20140719091347-c85192638098 h1:CskU77OGWecQWktntNSIzUdFUjZ7QRe9iN5N3oWP2gQ=
 github.com/hjr265/jail.go v0.0.0-20140719091347-c85192638098/go.mod h1:2p3ssQN4/ck9ozDRUbIUFFV7TLAkedOc9TUgRZOhkSc=
 github.com/mattn/go-sqlite3 v1.14.7 h1:fxWBnXkxfM6sRiuH3bqJ4CfzZojMOLVc0UTsTglEghA=

@@ -3,14 +3,10 @@
 package data
 
 import (
-	"io/ioutil"
+	"database/sql"
 	"log"
-	"path"
 	"time"
 
-	"database/sql"
-
-	"github.com/hjr265/go-zrsc/zrsc"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -34,13 +30,9 @@ func init() {
 		catch(err)
 	}
 
-	f, err := zrsc.Open(path.Join("data", "db-init.sql"))
-	catch(err)
-	b, err := ioutil.ReadAll(f)
+	b, err := dbInitSQL.ReadFile("db-init.sql")
 	catch(err)
 	_, err = db.Exec(string(b))
-	catch(err)
-	err = f.Close()
 	catch(err)
 
 	cnt, err := GetContest()

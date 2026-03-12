@@ -20,9 +20,6 @@ github.com/gorilla/websocket
 # github.com/hjr265/bloo v0.0.0-20141103193725-3fd271936319
 ## explicit
 github.com/hjr265/bloo
-# github.com/hjr265/go-zrsc v0.0.0-20140522072337-790a85bb06d2
-## explicit
-github.com/hjr265/go-zrsc/zrsc
 # github.com/hjr265/jail.go v0.0.0-20140719091347-c85192638098
 ## explicit
 github.com/hjr265/jail.go/jail
