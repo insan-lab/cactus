@@ -8,8 +8,13 @@ tasks:
 
   build:
     deps: [minify-css, minify-js, minify-html]
+    vars:
+      BUILD_TAG:
+        sh: git describe --tags --always 2>/dev/null || echo "dev"
+      BUILD_TIME:
+        sh: date -u '+%Y-%m-%dT%H:%M:%SZ'
     cmds:
-      - go build ./cmd/cactus
+      - go build -ldflags "-X main.version={{.BUILD_TAG | trimPrefix "v"}} -X main.date={{.BUILD_TIME}}" ./cmd/cactus
     sources:
       - go.mod
       - go.sum

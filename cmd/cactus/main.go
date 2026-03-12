@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -16,9 +17,18 @@ import (
 	"github.com/FurqanSoftware/cactus/sandbox"
 )
 
+var (
+	version   string
+	date      string
+	repoOwner = "FurqanSoftware"
+	repoName  = "cactus"
+)
+
 var cfg *toml.Tree
 
 func main() {
+	printBanner()
+
 	runtime.GOMAXPROCS((runtime.NumCPU() + 1) / 2)
 
 	_, err := os.Stat("config.toml")
@@ -88,6 +98,32 @@ func main() {
 	signal.Notify(sigCh, os.Interrupt)
 
 	log.Printf("Received %s; exiting", <-sigCh)
+}
+
+func printBanner() {
+	w := log.Writer()
+	fmt.Fprintln(w, `   ____          _`)
+	fmt.Fprintln(w, `  / ___|__ _  ___| |_ _   _ ___`)
+	fmt.Fprintln(w, " | |   / _` |/ __| __| | | / __|")
+	fmt.Fprintln(w, ` | |__| (_| | (__| |_| |_| \__ \`)
+	fmt.Fprintln(w, `  \____\__,_|\___|\__|\__,_|___/`)
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "By Furqan Software (https://furqansoftware.com)")
+	fmt.Fprintln(w)
+
+	if version != "" {
+		fmt.Fprintf(w, "» Release: %s", version)
+	} else {
+		fmt.Fprint(w, "» Release: -")
+	}
+	if date != "" {
+		fmt.Fprintf(w, " (%s)", date)
+	}
+	fmt.Fprintln(w)
+	fmt.Fprintln(w)
+
+	fmt.Fprintf(w, "» Project: https://github.com/%s/%s\n", repoOwner, repoName)
+	fmt.Fprintln(w)
 }
 
 func catch(err error) {
