@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	Conns = map[*websocket.Conn]bool{}
+	conns = map[*websocket.Conn]bool{}
 
 	chAdd = make(chan *websocket.Conn)
 	chDel = make(chan *websocket.Conn)
@@ -75,13 +75,13 @@ func init() {
 		for {
 			select {
 			case c := <-chAdd:
-				Conns[c] = true
+				conns[c] = true
 
 			case c := <-chDel:
-				delete(Conns, c)
+				delete(conns, c)
 
 			case v := <-chMsg:
-				for c := range Conns {
+				for c := range conns {
 					if err := c.WriteJSON(v); err != nil {
 						log.Printf("WebSocket write error: %v", err)
 					}
