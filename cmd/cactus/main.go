@@ -96,8 +96,8 @@ func main() {
 
 func printBanner() {
 	w := log.Writer()
-	fmt.Fprintln(w, `   ____          _`)
-	fmt.Fprintln(w, `  / ___|__ _  ___| |_ _   _ ___`)
+	fmt.Fprintln(w, `   ____           _             `)
+	fmt.Fprintln(w, "  / ___|__ _  ___| |_ _   _ ___ ")
 	fmt.Fprintln(w, " | |   / _` |/ __| __| | | / __|")
 	fmt.Fprintln(w, ` | |__| (_| | (__| |_| |_| \__ \`)
 	fmt.Fprintln(w, `  \____\__,_|\___|\__|\__,_|___/`)
